@@ -4,16 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\FilterParcellesRequest;
 use App\Http\Requests\ParcelleRequest;
+use App\Models\Owner;
 use App\Models\Parcelle;
 use App\Models\ParcelleOption;
+use App\Models\Picture;
+use App\Models\PictureParcelle;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Validator;
 
 class ParcelleController extends Controller
 {
     public function get_parcelles(){
         $parcelles = Parcelle::all();
+        $users = Parcelle::all()->where('user_id', '=', Auth::user()->id);
         return view('Admin.Parcelles.parcelles', [
+            'users' => $users,
             'parcelles' => $parcelles
         ]);
     }
@@ -45,26 +53,29 @@ class ParcelleController extends Controller
     }
 
     public function get_add_parcelle(){
-        $Parcelle = new Parcelle();
+        $parcelle = new Parcelle();
         return view('Admin.Parcelles.add-parcelle', [
-            'parcelle' => $Parcelle,
+            'parcelle' => $parcelle,
             'options' => ParcelleOption::pluck('name', 'id')
         ]);
     }
 
     public function add_parcelle(ParcelleRequest $request){
         $parcelle = Parcelle::create([
-            'nom' => $request->name,
+            'nom' => $request->nom,
             'description' => $request->description,
             'surface' => $request->surface,
             'ville' => $request->ville,
             'quartier' => $request->quartier,
+            'image' => $request->file('image')->store('mains', 'public'),
+            'user_id' => Auth::user()->id,
             'price' => $request->price,
         ]);
+
         $parcelle->parcelle_options()->sync($request->validated('options'));
 
 
-        return redirect()->route('get_parcelles');
+        return redirect()->route('edit_parcelle', ['id'=>$parcelle->id])->with('success', 'Parcelle Ajouté avec Succès! Veuilliez compléter les images');
     }
 
 
@@ -75,26 +86,29 @@ class ParcelleController extends Controller
         if ($slugue != $parcelleSlug) {
             return redirect()->route('parcelle.details', ['slugue' => $parcelleSlug, 'parcelle' => $parcelle]);
         }
-
+        $pictures = PictureParcelle::all();
         return view('User.parcelle_details', [
-            'parcelle' => $parcelle
+            'pictures' => $pictures,
+            'parcelle' => $parcelle,
+            'owner' => User::find($parcelle->id)
         ]);
 
     }
 
 
-    public function edit_parcelle($id){
-        $Parcelle = Parcelle::find($id);
-        $value = $Parcelle->parcelle_options()->pluck('id');
+    public function edit_parcelle(Parcelle $parcelle){
+        $value = $parcelle->parcelle_options()->pluck('id');
+        $pictures = PictureParcelle::all();
         return view('Admin.Parcelles.edit-parcelle', [
-            'Parcelle' => $Parcelle,
+            'Parcelle' => $parcelle,
+            'pictures' => $pictures,
             'val' => $value,
             'options' => ParcelleOption::pluck('name', 'id')
         ]);
     }
 
-    public function update_parcelle(ParcelleRequest $request, $id){
-        $Parcelle = Parcelle::find($id);
+    public function update_parcelle(ParcelleRequest $request, Parcelle $Parcelle){
+
         $Parcelle -> update([
             'nom' => $request->name,
             'description' => $request->description,
@@ -106,12 +120,13 @@ class ParcelleController extends Controller
         ]);
         $Parcelle->parcelle_options()->sync($request->validated('options'));
 
-        return redirect()->route('get_parcelles');
+        return redirect()->route('get_parcelles')->with('success', 'Parcelle mise à jour avec Succès');
     }
 
-    public function delete_parcelle($id){
-        $Parcelle = Parcelle::find($id);
+    public function delete_parcelle(Parcelle $Parcelle){
+        Storage::disk('public')->delete($Parcelle->id);
+        Storage::disk('public')->delete($Parcelle->image);
         $Parcelle->delete();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Parcelle supprimé avec Succès');
     }
 }

@@ -17,11 +17,13 @@ class House extends Model
         'surface',
         'ville',
         'quartier',
+        'image',
         'loyé',
         'avance',
         'rooms',
         'bedrooms',
         'status',
+        'user_id',
     ];
 
     public function house_options(){
@@ -31,4 +33,15 @@ class House extends Model
     public function getSlug(): string{
         return Str::slug($this->name);
     }
+
+    public function actor()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function pictures()
+    {
+        return $this->hasMany(Picture::class);
+    }
+
 }

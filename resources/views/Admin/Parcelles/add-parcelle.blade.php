@@ -10,15 +10,15 @@
 
     <form class="row g-3" method="POST" action="{{route('add_parcelle')}}" enctype="multipart/form-data">
         @csrf
-        <div class="form-group col-md-3">
-            <label class="control-label" for="name">Nom</label>
-            <input class="form-control" type="text" name="name" id="name">
-            @error('name')
+        <div class="form-group col-md-4">
+            <label class="control-label" for="nom">Nom</label>
+            <input class="form-control" type="text" name="nom" id="nom">
+            @error('nom')
                 <div class="alert alert-danger">{{ $message }}</div>
             @enderror
         </div>
 
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-4">
             <label class="control-label" for="ville">Ville</label>
             <select class="form-control" name="ville" id="ville">
                 <option value="">Dans quelle ville se trouve la parcelle??</option>
@@ -48,7 +48,7 @@
             @enderror
         </div>
 
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-4">
             <label class="control-label" for="quartier">Quartier</label>
             <select class="form-control" name="quartier" id="quartier">
                 <option value="">Choisissez le quartier/village...</option>
@@ -72,7 +72,15 @@
           @enderror
         </div>
 
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-4">
+            <label class="control-label" for="image">Image mise en avant</label>
+            <input class="form-control" type="file" name="image" id="image">
+            @error('image')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="form-group col-md-4">
             <label class="control-label" for="surface">Surface</label>
             <input class="form-control" type="number" id="surface" name="surface">
             @error('surface')
@@ -80,7 +88,7 @@
             @enderror
         </div>
 
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-4">
             <label class="control-label" for="price">Prix</label>
             <input class="form-control" type="number" id="price" name="price">
             @error('price')
@@ -88,9 +96,9 @@
             @enderror
         </div>
 
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-12">
             <label class="control-label" for="options">Caractéristiques</label>
-            <select class="form-control" name="options[]" id="options" value="{{$Parcelle->house_options()->pluck('id')}}" multiple>
+            <select class="form-control" name="options[]" id="options" value="{{$parcelle->parcelle_options()->pluck('id')}}" multiple>
                 @foreach ($options as $id => $value)
                     <option value="{{$id}}"> {{$value}} </option>
                 @endforeach
@@ -99,9 +107,8 @@
                 <div class="alert alert-danger">{{ $message }}</div>
             @enderror
         </div>
-
         <div class="col-md-12 mt-2">
-          <button type="submit" class="btn btn-light" style="background-color: #389d69;">Créer</button>
+            <button type="submit" class="btn btn-light" style="background-color: #389d69;">Créer</button>
         </div>
       </form>
 

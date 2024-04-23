@@ -27,8 +27,10 @@ class ParcelleRequest extends FormRequest
             'surface' => ['required'],
             'ville' => ['required'],
             'quartier' => ['required'],
+            'image' => ['required'],
             'price' => ['required'],
-            'status' => ['required']
+            'options' => ['array', 'exists:parcelle_options,id', 'required']
+
         ];
     }
 }

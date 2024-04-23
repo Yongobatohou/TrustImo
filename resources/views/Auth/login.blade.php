@@ -40,12 +40,16 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Bienvenue sur TrustImo !</h1>
                                     </div>
-
-                                        @error('loginError')
-                                        <div class="alert alert-danger" role="alert">
-                                            {{$errors}}
-                                        </div>
-                                        @enderror
+                                        @if (session('success'))
+                                            <div class="alert alert-success">
+                                            {{ session('success') }}
+                                            </div>
+                                        @endif
+                                        @if (session('error'))
+                                            <div class="alert alert-danger">
+                                            {{ session('error') }}
+                                            </div>
+                                        @endif
                                     <form class="user" method="POST" action="{{route('login')}}">
                                         @csrf
                                         <div class="form-group">

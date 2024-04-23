@@ -1,37 +1,10 @@
 @extends('layouts.base')
 
+@section('title', 'Propriété')
 
 @section('base')
 
-    <!-- Navbar Start -->
-    <div class="container-fluid nav-bar bg-transparent mb-5">
-        <nav class="navbar navbar-expand-lg bg-white navbar-light py-0 px-4">
-            <a href="index.html" class="navbar-brand d-flex align-items-center text-center">
-                <div class="icon p-2 me-2">
-                    <img class="img-fluid" src="../assets/img/logo_Trust Imo.png" alt="Icon" style="width: 50px; height: 50px;">
-                </div>
-                <h1 class="m-0 text-primary">TrustImo</h1>
-            </a>
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <div class="navbar-nav ms-auto">
-                    <a href="" class="nav-item nav-link"> <i class="fa fa-bell p-1"></i> Notifications</a>
-                </div>
-                <div class="dropdown" style="margin-left: 20px;">
-                    <button class="btn btn-primary px-3 py-2 my-2 d-lg-flex dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa fa-user p-1"></i>Pofil
-                    </button>
-                    <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="#">Mon Profil</a></li>
-                      <li><a class="dropdown-item" href="{{route('logout')}}">Se déconnecter</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </div>
-    <!-- Navbar End -->
+
 
 <div class="container-fluid bg-white p-0">
     <!-- Spinner Start -->
@@ -46,20 +19,19 @@
 
 <div class="container-lg">
     <div class="col">
+        <div class="bg-primary rounded text-white position-relative display-7 start-0 top-0 m-4 py-3 px-3">En {{$property->type}}</div>
         <div class="row">
-            <div class="bg-primary rounded text-white position-relative display-7 start-0 top-0 m-4 py-3 px-3">En {{$property->type}}</div>
-            <div class="col-lg-9">
+
+            <div class="col-lg-8">
                 <div id="carouselExampleAutoplaying h-50" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner">
-                      <div class="carousel-item active">
-                        <img src="../assets/img/property-1.jpg" class="d-block w-100" alt="...">
-                      </div>
-                      <div class="carousel-item">
-                        <img src="../assets/img/property-2.jpg" class="d-block w-100" alt="...">
-                      </div>
-                      <div class="carousel-item">
-                        <img src="../assets/img/property-3.jpg" class="d-block w-100" alt="...">
-                      </div>
+                        @foreach ($pictures as $picture)
+                            @if ($picture->house_id == $property->id)
+                                <div class="carousel-item active">
+                                    <img src="../storage/{{$picture->path}}" class="d-block w-100" alt="..." width="1950" height="500">
+                                </div>
+                            @endif
+                        @endforeach
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
                       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -71,7 +43,7 @@
                     </button>
                   </div>
             </div>
-            <div class="col-lg-3 d-flex flex-column justify-content-between">
+            <div class="col-lg-4 d-flex flex-column justify-content-between">
                 <img src="../assets/img/property-4.jpg" class="d-block w-100 h-50 my-2" alt="...">
                 <img src="../assets/img/property-5.jpg" class="d-block w-100 h-50 my-2" alt="...">
             </div>
@@ -107,11 +79,30 @@
                 <div class="card" style="width: 18rem;">
                     <div class="card-body text-center">
                       <h5 class="card-title">Prenez Rapidement contact avec l'annonceur.</h5>
-                      <p class="card-text">Publié par:</p>
+                      <p class="card-text">Publié par: <strong class="display-7">{{$owner->UserName}}</strong></p>
                       <div class="d-flex justify-content-between">
-                        <a href="#" class="btn btn-primary"><i class="fa fa-phone-alt me-2"></i>WhatsApp</a>
-                        <a href="#" class="btn btn-primary"><i class="fa fa-phone-alt me-2"></i>Appel</a>
+                        <a href="https://wa.me/229{{$owner->tel}}" target="blank" class="btn btn-primary"><i class="fa fa-phone-alt me-2"></i>WhatsApp</a>
+                        <a href="tel:{{$owner->tel}}" class="btn btn-primary"><i class="fa fa-phone-alt me-2"></i>Appel</a>
                       </div>
+                    </div>
+                </div>
+
+                <div class="card mt-4" style="width: 18rem;">
+                    <div class="card-header bg-success text-white text-center fw-bold">
+                        Politique de TrustImo
+                    </div>
+                    <div class="card-body">
+                      <ul>
+                        <li style="list-style:circle;">
+                            TrustImo n'est jamais impliqué dans aucune transaction, et ne contribue en aucun paiement, livraison, garantie, transaction, fraude, ou n'offre aucune "protection à l'acheteur" ou "certification de vendeur".
+                        </li>
+                        <li style="list-style:circle;">
+                            L’Entreprise n'est en aucun cas responsable des conséquences qui pourraient en découler.
+                        </li>
+                        <li style="list-style:circle;">
+                            Les informations publiées sur le Site sont non-contractuelles et fournies à titre informatif, gratuit, et sans aucune obligation de la part de L’Entreprise
+                        </li>
+                      </ul>
                     </div>
                 </div>
             </div>

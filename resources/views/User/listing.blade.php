@@ -4,35 +4,7 @@
 
 @section('base')
 
-    <!-- Navbar Start -->
-    <div class="container-fluid nav-bar bg-transparent mb-5">
-        <nav class="navbar navbar-expand-lg bg-white navbar-light py-0 px-4">
-            <a href="index.html" class="navbar-brand d-flex align-items-center text-center">
-                <div class="icon p-2 me-2">
-                    <img class="img-fluid" src="../assets/img/logo_Trust Imo.png" alt="Icon" style="width: 85px; height: 90px;">
-                </div>
-                <h1 class="m-0 text-primary">TrustImo</h1>
-            </a>
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <div class="navbar-nav ms-auto">
-                    <a href="" class="nav-item nav-link"> <i class="fa fa-bell p-1"></i> Notifications</a>
-                </div>
-                <div class="dropdown" style="margin-left: 20px;">
-                    <button class="btn btn-primary px-3 py-2 my-2 d-lg-flex dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa fa-user p-1"></i>Pofil
-                    </button>
-                    <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="#">Mon Profil</a></li>
-                      <li><a class="dropdown-item" href="{{route('logout')}}">Se déconnecter</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </div>
-    <!-- Navbar End -->
+
 
 <div class="container-fluid bg-white p-0">
     <!-- Spinner Start -->
@@ -116,7 +88,7 @@
                             <div class="col-lg-4 col-md-6">
                                 <div class="property-item rounded overflow-hidden">
                                     <div class="position-relative overflow-hidden">
-                                        <a href="{{route('properties.details', [$property, 'slug' => $property->getSlug()])}}"><img class="img-fluid" src="../assets/img/property-1.jpg" alt=""></a>
+                                        <a href="{{route('properties.details', [$property, 'slug' => $property->getSlug()])}}"><img class="img-fluid" src="../storage/{{$property->image}}" alt=""></a>
                                         <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">{{$property->type}}</div>
                                         <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{$property->name}}</div>
                                     </div>

@@ -2,11 +2,17 @@
 
 @section('auth')
 
-<div class="p-5">
-    <div class="text-center">
-        <h1 class="h4 text-gray-900 mb-4">Mettre à les informations de la propriété</h1>
+<div class="text-center">
+    <h1 class="h4 text-gray-900 mb-4">Mettre à les informations de la propriété</h1>
+</div>
+<div class="p-5 d-flex">
+
+    @if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
     </div>
-    <form class="row g-3" method="POST" action="{{route('edit_house', ['id' => $house->id])}}">
+    @endif
+    <form class="row col-lg-8 g-3" method="POST" action="{{route('edit_house', $house)}}">
         @method('PUT')
         @csrf
         <div class="form-group col-md-3">
@@ -146,6 +152,29 @@
           <button type="submit" class="btn btn-light" style="background-color: #389d69;">Mettre à jour </button>
         </div>
     </form>
+
+    <div class="col-lg-4">
+        @foreach ($pictures as $picture)
+            <div class="col-md-3">
+                @if ($picture->house_id == $house->id)
+                    <img src=" ../storage/{{$picture->path}}" class="img-thumbnail">
+                    <a class="btn btn-danger btn-sm mt-2" href="{{route('pictures.destroy', $picture->id)}}">Supprimer</a>
+                @endif
+            </div>
+        @endforeach
+        <form  action="{{route('pictures.store', ['id'=>$house->id])}}" method="post" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group">
+                <label class="control-label" for="images">Images</label>
+                <input class="form-control" type="file" id="images" name="images" multiple>
+                @error('images')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
+            </div>
+            <input class="btn btn-light" style="background-color: #389d69;" type="submit" value="Ajouter">
+        </form>
+    </div>
+
 </div>
 
 

@@ -16,17 +16,24 @@ class Parcelle extends Model
         'surface',
         'ville',
         'quartier',
+        'image',
         'price',
-        'status'
+        'status',
+        'user_id',
 ];
 
 
 public function parcelle_options(){
-    return $this->belongsToMany(ParcelleOption::class, 'options_parcelle', 'parcelle_id', 'parcelle_option_id');
+    return $this->belongsToMany(ParcelleOption::class, 'parcel_option', 'parcelle_id', 'parcelle_option_id');
 }
 
 public function getSlug(): string{
     return Str::slug($this->nom);
+}
+
+public function actor()
+{
+    return $this->belongsTo(User::class);
 }
 
 }

@@ -28,6 +28,7 @@ class HouseRequest extends FormRequest
             'surface' => ['required'],
             'ville' => ['required'],
             'quartier' => ['required'],
+            'image' => ['required'],
             'loyé' => ['required'],
             'avance' => ['required'],
             'rooms' => ['required'],

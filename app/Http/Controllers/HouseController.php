@@ -7,16 +7,22 @@ use App\Http\Requests\HouseRequest;
 use App\Models\House;
 use App\Models\HouseFeatures;
 use App\Models\HouseOption;
+use App\Models\Owner;
 use App\Models\Parcelle;
+use App\Models\Picture;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class HouseController extends Controller
 {
     public function get_houses(){
         $maisons = House::all();
+        $users = House::all()->where('user_id', '=', Auth::user()->id);
         return view('Admin.Maisons.maisons', [
-            'maisons' => $maisons
+            'maisons' => $maisons,
+            'users' => $users,
         ]);
     }
 
@@ -63,6 +69,7 @@ class HouseController extends Controller
     }
 
     public function add_house(HouseRequest $houseRequest){
+
         $house = House::create([
             'name' => $houseRequest->name,
             'type' => $houseRequest->type,
@@ -70,14 +77,18 @@ class HouseController extends Controller
             'surface' => $houseRequest->surface,
             'ville' => $houseRequest->ville,
             'quartier' => $houseRequest->quartier,
+            'image' => $houseRequest->file('image')->store('mains', 'public'),
             'loyé' => $houseRequest->loyé,
             'avance' => $houseRequest->avance,
             'rooms' => $houseRequest->rooms,
-            'bedrooms' => $houseRequest->bedrooms
+            'bedrooms' => $houseRequest->bedrooms,
+            'user_id' => Auth::user()->id,
         ]);
+
+
         $house->house_options()->sync($houseRequest->validated('options'));
 
-        return redirect()->route('get_houses');
+        return redirect()->route('edit_house', $house)->with('success', 'Propriété Ajouté avec Succès! Veuilliez compléter les images');
     }
 
     public function show($slug, House $property){
@@ -88,24 +99,29 @@ class HouseController extends Controller
             return redirect()->route('properties.details', ['slug' => $propertySlug, 'property' => $property]);
         }
 
+        $pictures = Picture::all();
+
         return view('User.property_details', [
-            'property' => $property
+            'property' => $property,
+            'pictures' => $pictures,
+            'owner' => User::find($property->user_id)
         ]);
 
     }
 
-    public function edit_house($id){
-        $house = House::find($id);
-        $value = $house->house_options()->pluck('id');
+    public function edit_house(House $maison){
+
+        $pictures = Picture::all();
+        $value = $maison->house_options()->pluck('id');
         return view('Admin.Maisons.edit-maison', [
-            'house' => $house,
+            'house' => $maison,
             'val' => $value,
+            'pictures' => $pictures,
             'options' => HouseOption::pluck('name', 'id')
         ]);
     }
 
-    public function update_house(HouseRequest $houseRequest, $id){
-        $house = House::find($id);
+    public function update_house(HouseRequest $houseRequest,House $house){
         $house -> update([
             'name' => $houseRequest->name,
             'type' => $houseRequest->type,
@@ -120,13 +136,14 @@ class HouseController extends Controller
         ]);
         $house->house_options()->sync($houseRequest->validated('options'));
 
-        return redirect()->route('get_houses');
+        return redirect()->route('get_houses')->with('success', 'Propriété mise à jour avec Succès');
     }
 
-    public function delete_house($id){
-        $house = House::find($id);
-        $house->delete();
-        return redirect()->back();
+    public function delete_house(House $maison){
+        Storage::disk('public')->delete($maison->id);
+        Storage::disk('public')->delete($maison->image);
+        $maison->delete();
+        return redirect()->back()->with('success', 'Propriété supprimé avec Succès');
     }
 
 }

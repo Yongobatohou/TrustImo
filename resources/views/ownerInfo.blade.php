@@ -1,4 +1,4 @@
-@extends('layouts.base')
+@extends('layouts.base2')
 
 @section('title', 'Pro')
 
@@ -16,18 +16,21 @@
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            @guest
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ms-auto">
-                    <a href="{{route('get_owner_login')}}" class="nav-item nav-link">Connexion</a>
+                    <a href="{{route('get_login')}}" class="nav-item nav-link">Connexion</a>
                 </div>
-                <a href="{{route('get_register')}}" class="btn btn-primary px-3 py-2 d-none d-lg-flex">Incription</a>
+
+                <a href="{{route('get_register')}}" class="btn btn-primary">Incription</a>
             </div>
+            @endguest
         </nav>
     </div>
     <!-- Navbar End -->
 
         <!-- Mashead header-->
-        <header class="masthead">
+        <header class="masthead col-md-12">
             <div class="container px-3">
                 <div class="row gx-5 align-items-center">
                     <div class="col-lg-7">
@@ -36,14 +39,14 @@
                             <h4 class="display-4 fw-normal text-dark lh-1 mb-3">Le portail qui vous redonne le pouvoir</h4>
                             <h5 class="display-7 lead fw-normal text-muted mb-5">Gagnez en visibilité et crédibilité grâce aux annonces certifiées envoyées en temps réel à notre million d'utilisateurs.</h5>
                             <div class="d-flex flex-column flex-lg-row align-items-center">
-                                <a class="btn btn-outline-primary py-3 px-4 rounded-3" href="#" target="_blank">Essayez Gratuitement!!!</a>
+                                <a class="btn btn-outline-primary py-3 px-4 rounded-3" href="{{route('register')}}" target="_blank">Essayez Gratuitement!!!</a>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-5">
                         <!-- Masthead device mockup feature-->
                         <div class="masthead-device-mockup fadeInDown wow">
-                            <img src="../assets/img/Screen-app-agence.png" alt="">
+                            <img src="../assets/img/Screen-app-agence.png" class="img-fluid" alt="">
                         </div>
                     </div>
                 </div>
@@ -150,7 +153,7 @@
                         </div>
                     </div>
                     <div class="d-flex my-5 mt-5 align-items-center justify-content-center">
-                        <a class="btn btn-primary py-3 px-4 rounded-3" href="#" target="_blank">Essayez Gratuitement!!!</a>
+                        <a class="btn btn-primary py-3 px-4 rounded-3" href="{{route('register')}}" target="_blank">Essayez Gratuitement !!!</a>
                     </div>
                 </div>
             </div>
@@ -195,7 +198,7 @@
                                             <p class="text-muted mb-0">Gestion de toutes vos annonces sur votre compte TrustImo Pro</p>
                                         </div>
                                         <div class="text-center">
-                                            <img src="../assets/img/immobilbiers.png" alt="" class="img-center shadow-lg mt-5 rounded-4">
+                                            <img src="../assets/img/immobilbiers.png" alt="" class="img-center img-fluid shadow-lg mt-5 rounded-4">
                                         </div>
                                     </div>
                                 </div>
@@ -203,7 +206,7 @@
                         </div>
                     </div>
                     <div class="d-flex my-5 mt-5 align-items-center justify-content-center">
-                        <a class="fadeInOut wow btn btn-primary py-3 px-4 rounded-3" href="#" target="_blank">Essayez Gratuitement!!!</a>
+                        <a class="fadeInOut wow btn btn-primary py-3 px-4 rounded-3" href="{{route('register')}}" target="_blank">Essayez Gratuitement pendant 30jours!!!</a>
                     </div>
                 </div>
             </div>

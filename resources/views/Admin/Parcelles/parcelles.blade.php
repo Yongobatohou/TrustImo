@@ -3,6 +3,11 @@
 
 @section('auth')
 
+@if (session('success'))
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
+@endif
          <!-- Page Heading -->
          <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Parcelles Enregistrées</h1>
@@ -24,7 +29,6 @@
                                                                 <th>Nom</th>
                                                                 <th>Surface</th>
                                                                 <th>Prix</th>
-                                                                <th>Description</th>
                                                                 <th>Ville</th>
                                                                 <th>Quartier</th>
                                                                 <th>Date d'inscription</th>
@@ -37,15 +41,35 @@
                                                                 <th>Nom</th>
                                                                 <th>Surface</th>
                                                                 <th>Prix</th>
-                                                                <th>Description</th>
                                                                 <th>Ville</th>
                                                                 <th>Quartier</th>
-                                                                <th>Date d'inscription</th>
+                                                                <th>Date d'enregistrement</th>
                                                                 <th>Actions</th>
                                                             </tr>
                                                         </tfoot>
                                                         <tbody>
 
+                                                          @if (Auth::user()->role == 'owner')
+                                                            @foreach ($users as $user)
+
+                                                            <tr>
+                                                                <td>{{$user->id}}</td>
+                                                                <td>{{$user->name}}</td>
+                                                                <td>{{$user->surface}}</td>
+                                                                <td>{{$user->price}}</td>
+                                                                <td>{{$user->ville}}</td>
+                                                                <td>{{$user->quartier}}</td>
+                                                                <td>{{$user->created_at}}</td>
+                                                                <td class="d-flex">
+                                                                    <a href="{{route('edit_parcelle', ['id' => $user->id])}}" class="d-none m-2 d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+                                                                        class="fas fa-edit fa-lg text-white-70"></i></a>
+                                                                    <a href="{{route('delete_parcelle', ['id' => $user->id])}}" class="d-none m-2 d-sm-inline-block btn btn-sm btn-danger shadow-sm"><i
+                                                                            class="fas fa-trash fa-lg text-white-70"></i></a>
+                                                                </td>
+                                                            </tr>
+
+                                                            @endforeach
+                                                          @else
                                                             @foreach ($parcelles as $parcelle)
 
                                                             <tr>
@@ -53,19 +77,19 @@
                                                                 <td>{{$parcelle->name}}</td>
                                                                 <td>{{$parcelle->surface}}</td>
                                                                 <td>{{$parcelle->price}}</td>
-                                                                <td>{{$parcelle->description}}</td>
                                                                 <td>{{$parcelle->ville}}</td>
                                                                 <td>{{$parcelle->quartier}}</td>
                                                                 <td>{{$parcelle->created_at}}</td>
-                                                                <td>
-                                                                    <a href="{{route('edit_parcelle', ['id' => $parcelle->id])}}" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+                                                                <td class="d-flex">
+                                                                    <a href="{{route('edit_parcelle', $parcelle)}}" class="d-none m-2 d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
                                                                         class="fas fa-edit fa-lg text-white-70"></i></a>
-                                                                    <a href="{{route('delete_parcelle', ['id' => $parcelle->id])}}" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"><i
+                                                                    <a href="{{route('delete_parcelle', $parcelle)}}" class="d-none m-2 d-sm-inline-block btn btn-sm btn-danger shadow-sm"><i
                                                                             class="fas fa-trash fa-lg text-white-70"></i></a>
                                                                 </td>
                                                             </tr>
 
                                                             @endforeach
+                                                          @endif
 
                                                         </tbody>
                                                     </table>

@@ -3,6 +3,11 @@
 
 @section('auth')
 
+@if (session('success'))
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
+@endif
         <!-- Page Heading -->
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Propriétés Enregistrées</h1>
@@ -23,7 +28,6 @@
                                                                 <th>Nom</th>
                                                                 <th>Type</th>
                                                                 <th>Ville</th>
-                                                                <th>Quartier/ <br>Village</th>
                                                                 <th>Prix/Loyé</th>
                                                                 <th>Avance</th>
                                                                 <th>Pièces</th>
@@ -38,7 +42,6 @@
                                                                 <th>Nom</th>
                                                                 <th>Type</th>
                                                                 <th>Ville</th>
-                                                                <th>Quartier/ <br>Village</th>
                                                                 <th>Prix/Loyé</th>
                                                                 <th>Avance</th>
                                                                 <th>Pièces</th>
@@ -50,28 +53,51 @@
                                                         </tfoot>
                                                         <tbody>
 
-                                                            @foreach ($maisons as $maison)
+                                                            @if (Auth::user()->role == 'owner')
+                                                                @foreach ($users as $user)
 
-                                                            <tr class="col-12">
-                                                                <td>{{$maison->name}}</td>
-                                                                <td>{{$maison->type}}</td>
-                                                                <td>{{$maison->ville}}</td>
-                                                                <td>{{$maison->quartier}}</td>
-                                                                <td>{{$maison->loyé}}</td>
-                                                                <td>{{$maison->avance}}</td>
-                                                                <td>{{$maison->rooms}}</td>
-                                                                <td>{{$maison->bedrooms}}</td>
-                                                                <td>{{$maison->created_at}}</td>
-                                                                <td>{{$maison->status}}</td>
-                                                                <td class="d-flex">
-                                                                    <a href="{{route('edit_house', ['id' => $maison->id])}}" class="d-none m-2 d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
-                                                                        class="fas fa-edit fa-lg text-white-70"></i></a>
-                                                                    <a href="{{route('delete_house', ['id' => $maison->id])}}" class="d-none m-2 d-sm-inline-block btn btn-sm btn-danger shadow-sm"><i
-                                                                            class="fas fa-trash fa-lg text-white-70"></i></a>
-                                                                </td>
-                                                            </tr>
+                                                                <tr class="col-12">
+                                                                    <td>{{$user->name}}</td>
+                                                                    <td>{{$user->type}}</td>
+                                                                    <td>{{$user->ville}}</td>
+                                                                    <td>{{$user->loyé}}</td>
+                                                                    <td>{{$user->avance}}</td>
+                                                                    <td>{{$user->rooms}}</td>
+                                                                    <td>{{$user->bedrooms}}</td>
+                                                                    <td>{{$user->created_at}}</td>
+                                                                    <td>{{$user->status}}</td>
+                                                                    <td class="d-flex">
+                                                                        <a href="{{route('edit_house', ['id' => $user->id])}}" class="d-none m-2 d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+                                                                            class="fas fa-edit fa-lg text-white-70"></i></a>
+                                                                        <a href="{{route('delete_house', ['id' => $user->id])}}" class="d-none m-2 d-sm-inline-block btn btn-sm btn-danger shadow-sm"><i
+                                                                                class="fas fa-trash fa-lg text-white-70"></i></a>
+                                                                    </td>
+                                                                </tr>
 
-                                                            @endforeach
+                                                                @endforeach
+                                                            @else
+                                                                @foreach ($maisons as $maison)
+
+                                                                <tr class="col-12">
+                                                                    <td>{{$maison->name}}</td>
+                                                                    <td>{{$maison->type}}</td>
+                                                                    <td>{{$maison->ville}}</td>
+                                                                    <td>{{$maison->loyé}}</td>
+                                                                    <td>{{$maison->avance}}</td>
+                                                                    <td>{{$maison->rooms}}</td>
+                                                                    <td>{{$maison->bedrooms}}</td>
+                                                                    <td>{{$maison->created_at}}</td>
+                                                                    <td>{{$maison->status}}</td>
+                                                                    <td class="d-flex">
+                                                                        <a href="{{route('edit_house', $maison)}}" class="d-none m-2 d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+                                                                            class="fas fa-edit fa-lg text-white-70"></i></a>
+                                                                        <a href="{{route('delete_house', $maison)}}" class="d-none m-2 d-sm-inline-block btn btn-sm btn-danger shadow-sm"><i
+                                                                                class="fas fa-trash fa-lg text-white-70"></i></a>
+                                                                    </td>
+                                                                </tr>
+
+                                                                @endforeach
+                                                            @endif
 
                                                         </tbody>
                                                     </table>

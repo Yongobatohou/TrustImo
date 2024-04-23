@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EditUserRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterUsersRequest;
+use App\Mail\WellcomeMail;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -20,10 +23,14 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request){
         $credentials = $request->only('email','password');
-        if( Auth::guard('web')->attempt($credentials)){
-            return redirect()->route('properties.listing');
+        if( Auth::attempt($credentials)){
+            if (Auth::user()->role == 'user') {
+                return redirect()->intended(route('properties.listing'));
+            }else{
+                return redirect()->intended(route('get_dashboard'));
+            }
         }
-        return redirect()->back()->withErrors($credentials);
+        return redirect()->back()->with('error', 'Email ou mot de passe incorrect! Veuilliez reéssayer');
 
     }
 
@@ -35,18 +42,23 @@ class AuthController extends Controller
     }
 
     public function register(RegisterUsersRequest $registerUsersRequest){
-        User::create([
+        $user = User::create([
             'UserName' => $registerUsersRequest->UserName,
             'email' => $registerUsersRequest->email,
             'departement' => $registerUsersRequest->departement,
             'userCity' => $registerUsersRequest->userCity,
             'tel' => $registerUsersRequest->tel,
+            'role' => $registerUsersRequest->role,
             'password' => Hash::make($registerUsersRequest->password)
         ]);
 
-        return redirect()->route('get_login');
+        Mail::send(new WellcomeMail($user));
+
+        return redirect()->route('get_login')->with('success', 'Inscription effectuée avec Succès! Merci de vous Connecter');
     }
     //Register functions end
+
+
 
     //Update user profil functions end
     public function user_edit($id){
@@ -56,7 +68,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function user_update(RegisterUsersRequest $registerUsersRequest, $id){
+    public function user_update(EditUserRequest $registerUsersRequest, $id){
         $user = User::find($id);
         $user -> update([
             'UserName' => $registerUsersRequest->UserName,
@@ -64,12 +76,17 @@ class AuthController extends Controller
             'departement' => $registerUsersRequest->departement,
             'userCity' => $registerUsersRequest->userCity,
             'tel' => $registerUsersRequest->tel,
+            'role' => $registerUsersRequest->role,
             'password' => Hash::make($registerUsersRequest->password)
         ]);
-        return redirect()->route('get_clients');
+        return redirect()->route('get_clients')->with('success', 'Profil mis à jour avec Succès');
     }
     //Update user profil end
 
+    //Profil
+    public function profil(){
+        return view('Admin.users-profile');
+    }
     //Logout function Start
     public function logout(){
         Auth::logout();
@@ -81,7 +98,7 @@ class AuthController extends Controller
     public function delete_user($id){
         $user = User::find($id);
         $user->delete();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Profil supprimé avec succès');
     }
     //Delete user profil end
 

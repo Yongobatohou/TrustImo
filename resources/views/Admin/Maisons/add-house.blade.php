@@ -91,7 +91,15 @@
           @enderror
         </div>
 
-        <div class="form-group col-md-2">
+        <div class="form-group col-md-4">
+            <label class="control-label" for="image">Image mise en avant</label>
+            <input class="form-control" type="file" name="image" id="image">
+            @error('image')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="form-group col-md-4">
             <label class="control-label" for="surface">Surface</label>
             <input class="form-control" type="number" id="surface" name="surface">
             @error('surface')
@@ -99,7 +107,7 @@
             @enderror
         </div>
 
-        <div class="form-group col-md-2">
+        <div class="form-group col-md-4">
             <label class="control-label" for="rooms">Nombre de pièces</label>
             <input class="form-control" type="number" name="rooms" id="rooms">
             @error('rooms')
@@ -107,7 +115,7 @@
             @enderror
         </div>
 
-        <div class="form-group col-md-2">
+        <div class="form-group col-md-4">
             <label class="control-label" for="bedrooms">Nombre de Chambres</label>
             <input class="form-control" type="text" name="bedrooms" id="bedrooms">
             @error('bedrooms')
@@ -115,7 +123,7 @@
             @enderror
         </div>
 
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-4">
             <label class="control-label" for="loyé">Prix</label>
             <input class="form-control" type="text" name="loyé" id="loyé">
             @error('loyé')
@@ -123,13 +131,14 @@
             @enderror
         </div>
 
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-4">
             <label class="control-label" for="avance">Nombre de mois d'avance</label>
             <input class="form-control" type="number" name="avance" id="avance">
             @error('avance')
                 <div class="alert alert-danger">{{ $message }}</div>
             @enderror
         </div>
+
 
         <div class="form-group col-md-12">
             <label class="control-label" for="avance">Caractéristiques</label>

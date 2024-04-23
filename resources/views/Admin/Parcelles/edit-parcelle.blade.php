@@ -1,12 +1,17 @@
 @extends('layouts.auth')
 
 @section('auth')
+<div class="text-center">
+    <h1 class="h4 text-gray-900 mb-4">Mettre à les informations de la parcelle</h1>
+</div>
+<div class="p-5 d-flex">
 
-<div class="p-5">
-    <div class="text-center">
-        <h1 class="h4 text-gray-900 mb-4">Mettre à les informations de la parcelle</h1>
+    @if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
     </div>
-    <form class="row g-3" method="POST" action="{{route('update_parcelle', ['id' => $Parcelle->id])}}">
+    @endif
+    <form class="row g-3 col-lg-8" method="POST" action="{{route('update_parcelle', $Parcelle)}}">
         @method('PUT')
         @csrf
         <div class="form-group col-md-3">
@@ -88,7 +93,7 @@
         </div>
 
         <div class="form-group col-md-6">
-            <label class="control-label" for="avance">Caractéristiques</label>
+            <label class="control-label" for="options">Caractéristiques</label>
             <select class="form-control" name="options[]" id="options" multiple>
                 @foreach ($options as $id => $value)
                     <option value="{{$id}}" @selected($val->contains($id))> {{$value}} </option>
@@ -103,6 +108,28 @@
             <button type="submit" class="btn btn-light" style="background-color: #389d69;">Mettre à jour </button>
         </div>
     </form>
+
+    <div class="col-lg-4">
+        @foreach ($pictures as $picture)
+            <div class="col-md-3">
+                @if ($picture->parcelle_id == $Parcelle->id)
+                    <img src=" ../storage/{{$picture->path}}" class="img-thumbnail">
+                    <a class="btn btn-danger btn-sm mt-2" href="{{route('destroyparcellepictures', ['id'=>$picture->id])}}">Supprimer</a>
+                @endif
+            </div>
+        @endforeach
+        <form  action="{{route('addparcellepictures', ['id'=>$Parcelle->id])}}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group">
+                <label class="control-label" for="images">Images</label>
+                <input class="form-control" type="file" id="images" name="images" multiple>
+                @error('images')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
+            </div>
+            <input class="btn btn-light" style="background-color: #389d69;" type="submit" value="Ajouter">
+        </form>
+    </div>
 </div>
 
 @endsection
